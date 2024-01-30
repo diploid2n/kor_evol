@@ -1,0 +1,76 @@
+
+
+
+####### binomial distribution 95% confidence interval #####
+
+set.seed(1)
+n <- 100;
+x <- c(1:n)
+y <- rep(0.5,n)
+plot(x,y,type="l",ylim=c(0,1))
+for (i in 1:n) {
+	a <- rbinom(1, size = 100, prob=0.5)
+	b <- c(binom.test(a, 100, p=0.5)$conf.int)
+	if (b[1]>0.5 || b[2]<0.5) {
+		points(c(x[i],x[i]), c(b[1],b[2]), type="p",col='red');
+		lines(c(x[i],x[i]), c(b[1],b[2]),col='red');
+	}
+	else {
+		points(c(x[i],x[i]), c(b[1],b[2]), type="p");
+		lines(c(x[i],x[i]), c(b[1],b[2]));
+	}
+}
+
+
+
+
+######### Beta pdf plot
+
+library(tidyverse)
+
+x1 <- seq(0,1,len=100)
+y1 <- dbeta(x1, 1, 1)
+y2 <- dbeta(x1, 10, 1)
+y3 <- dbeta(x1, 1, 10)
+y4 <- dbeta(x1, 10, 10)
+
+
+z1 <- dbeta(x1,61,41)
+z2 <- dbeta(x1,70,41)
+z3 <- dbeta(x1,61,50)
+z4 <- dbeta(x1,70,50)
+
+
+df = data.frame(x1, y1, y2, y3, y4)
+colnames(df) <- c("Xval", "beta(1,1)", "beta(10,1)", "beta(1,10)", "beta(10,10)")
+
+# Sys.setlocale("LC_ALL","English") # language setting: Korean -> English 
+# install.packages("reshape")
+# library(reshape)
+
+df %>% 
+  as_tibble() %>% 
+  pivot_longer(-1) %>% 
+  ggplot(aes(x=Xval, y=value, color = name)) + 
+   # geom_point() +
+   geom_line(size=1) + labs(x='theta', y="prbability density", color="")
+
+
+#######
+
+df2 = data.frame(x1, z1, z2, z3, z4)
+colnames(df2) <- c("Xval", "beta(61,41)", "beta(70,41)", "beta(61,50)", "beta(70,50)")
+
+
+df2 %>% 
+  as_tibble() %>% 
+  pivot_longer(-1) %>% 
+  ggplot(aes(x=Xval, y=value, color = name)) + 
+   #geom_point() +
+   geom_line(size=1)  + labs(x='theta', y="prbability density", color="")
+
+
+####
+
+
+
